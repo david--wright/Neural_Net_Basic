@@ -110,31 +110,28 @@ class NeuralNet:
       self.feedForward()
       self.backPropagate(trainData['outputs'][j])
       err += self.getError(trainData['outputs'][j])
-      if printerr:
-        print (i,"- error: ", err)
+     if printerr:
+      print (i,"- error: ", err)
     return err
 
 def main():
-  targetError = 0.01
   topology = [2,3,2]
   net = NeuralNet(topology)
   Neuron.learnRate = 0.09
   Neuron.p = 0.015
   inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
   outputs = [[0, 0], [1, 0], [1, 0], [0, 1]]
+  trainIter = input("Number of training iterations: ")
   trainData = {'inputs':inputs, 'outputs':outputs}
-  err = 1
-  while err > targetError:
-    err = 0
-    err = net.train(trainData, 10000, True)
-    print ("Training Run 1 - error: ", err)
+  err = net.train(trainData, int(trainIter), True)
+  print ("Training Run - error: ", err)
  
   while True:
     a = input("a = ")
     b = input("b = ")
     net.setInput([float(a),float(b)])
     net.feedForward()
-    print (net.getThresholdOutput())
+    print (net.getOutput())
 
 if __name__ == '__main__':
     main()
