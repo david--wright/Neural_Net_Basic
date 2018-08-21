@@ -102,23 +102,32 @@ class NeuralNet:
     output.pop() #remove bias neuron
     return output
 
+  def train(self, trainData, iterations, printerr):
+    for i in range(iterations):
+     for j,x in enumerate(trainData['inputs']):
+      err = 0
+      self.setInput(x)
+      self.feedForward()
+      self.backPropagate(trainData['outputs'][j])
+      err += self.getError(trainData['outputs'][j])
+      if printerr:
+        print (i,"- error: ", err)
+    return err
+
 def main():
   targetError = 0.01
-  topology = [2,3,3,2]
+  topology = [2,3,2]
   net = NeuralNet(topology)
   Neuron.learnRate = 0.09
   Neuron.p = 0.015
   inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
   outputs = [[0, 0], [1, 0], [1, 0], [0, 1]]
+  trainData = {'inputs':inputs, 'outputs':outputs}
   err = 1
   while err > targetError:
     err = 0
-    for i,x in enumerate(inputs):
-      net.setInput(x)
-      net.feedForward()
-      net.backPropagate(outputs[i])
-      err += net.getError(outputs[i])
-    print ("error: ", err)
+    err = net.train(trainData, 10000, True)
+    print ("Training Run 1 - error: ", err)
  
   while True:
     a = input("a = ")
